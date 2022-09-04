@@ -1,28 +1,52 @@
-import React, { Component } from 'react';
-
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
-import './Blog.css';
+import React, { Component } from "react";
+import axios from "axios";
+import Post from "../../components/Post/Post";
+import FullPost from "../../components/FullPost/FullPost";
+import NewPost from "../../components/NewPost/NewPost";
+import "./Blog.css";
 
 class Blog extends Component {
-    render () {
-        return (
-            <div>
-                <section className="Posts">
-                    <Post />
-                    <Post />
-                    <Post />
-                </section>
-                <section>
-                    <FullPost />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
-            </div>
-        );
-    }
+  state = {
+    posts: [],
+    selectPostId: null,
+  };
+  componentDidMount() {
+    axios.get("https://jsonplaceholder.typicode.com/posts").then((res) => {
+      const posts = res.data.slice(0, 4);
+      const updatedPosts = posts.map((el) => {
+        return { ...el, author: "max" };
+      });
+      this.setState({ posts: updatedPosts });
+    });
+  }
+  selectPostHandler(id) {
+    this.setState({ selectPostId: id });
+  }
+  render() {
+    const posts = this.state.posts.map((el) => {
+      return (
+        <Post
+          key={el.id}
+          title={el.title}
+          author={el.author}
+          clicked={() => {
+            this.selectPostHandler(el.id);
+          }}
+        />
+      );
+    });
+    return (
+      <div>
+        <section className="Posts">{posts}</section>
+        <section>
+          <FullPost id={this.state.selectPostId} />
+        </section>
+        <section>
+          <NewPost />
+        </section>
+      </div>
+    );
+  }
 }
 
 export default Blog;
