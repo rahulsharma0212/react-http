@@ -12,20 +12,16 @@ class FullPost extends Component {
         !this.state.fullPost ||
         (this.state.fullPost && this.state.fullPost.id !== this.props.id)
       ) {
-        axios
-          .get(`https://jsonplaceholder.typicode.com/posts/${this.props.id}`)
-          .then((res) => {
-            this.setState({ fullPost: res.data });
-          });
+        axios.get(`posts/${this.props.id}`).then((res) => {
+          this.setState({ fullPost: res.data });
+        });
       }
     }
   }
   deletePostHandler = () => {
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/posts/${this.props.id}`)
-      .then((res) => {
-        console.log(res);
-      });
+    axios.delete(`posts/${this.props.id}`).then((res) => {
+      console.log(res);
+    });
   };
   render() {
     let post = <p style={{ textAlign: "center" }}>Please select a Post!</p>;
